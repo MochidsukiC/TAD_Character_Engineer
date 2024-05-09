@@ -7,6 +7,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 
+import static jp.houlab.mochidsuki.tad_character_engineer.TAD_Character_Engineer.plugin;
+import static jp.houlab.mochidsuki.toweraandd.TowerAandD.config;
+
 public class DummyPlayerRunner extends BukkitRunnable {
 
     ItemDisplay itemDisplay;
@@ -20,11 +23,8 @@ public class DummyPlayerRunner extends BukkitRunnable {
 
     @Override
     public void run() {
-        itemDisplay.teleport(spawmVector.setX(times).toLocation());
-
-
-
-
+        //itemDisplay.teleport(spawmVector.setX(times).toLocation(plugin.getServer().getWorld(config.getString("World"))));
+        itemDisplay.setRotation(90,times*18);
     times++;
     }
 }
