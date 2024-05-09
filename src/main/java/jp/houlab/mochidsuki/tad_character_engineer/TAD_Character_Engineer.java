@@ -8,6 +8,9 @@ public final class TAD_Character_Engineer extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
 
+        //Event
+        getServer().getPluginManager().registerEvents(new Listener(),this);
+
     }
 
     @Override
