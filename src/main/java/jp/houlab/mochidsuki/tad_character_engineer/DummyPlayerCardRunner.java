@@ -1,9 +1,11 @@
 package jp.houlab.mochidsuki.tad_character_engineer;
 
+import jp.houlab.mochidsuki.toweraandd.CommandListener;
 import jp.houlab.mochidsuki.toweraandd.TowerAandD;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -15,22 +17,23 @@ public class DummyPlayerCardRunner extends BukkitRunnable {
 
     ItemDisplay itemDisplay;
     Vector spawmVector;
+    Player player;
     int times;
 
-    public DummyPlayerCardRunner(ItemDisplay itemDisplay, Vector spawnVector){
-        this.itemDisplay = itemDisplay;
-        this.spawmVector = spawnVector;
+    public DummyPlayerCardRunner(Player player){
+        this.itemDisplay = player.getWorld().spawn(player.getEyeLocation(), ItemDisplay.class);
+        this.spawmVector = player.getLocation().getDirection();
+        this.player = player;
     }
 
     @Override
     public void run() {
-        Location location = spawmVector.setX(times).toLocation(plugin.getServer().getWorld(config.getString("World")));
-        //itemDisplay.teleport(location);
+        itemDisplay.setVelocity(spawmVector.multiply(2));
         itemDisplay.setRotation(90,times*18);
-    times++;
+        times++;
 
-        if(location.getWorld().getBlockAt(location).getBlockData().getMaterial() != Material.AIR){
-
+        if(itemDisplay.getLocation().getWorld().getBlockAt(itemDisplay.getLocation()).getBlockData().getMaterial() != Material.AIR){
+            new DummyPlayerSystem(itemDisplay,player).runTaskTimer(plugin,0,1);
             cancel();
         }
     }
@@ -38,19 +41,29 @@ public class DummyPlayerCardRunner extends BukkitRunnable {
 
 class DummyPlayerSystem extends BukkitRunnable{
     public int times;
-    public DummyPlayerSystem(){
-
+    public ItemDisplay itemDisplay;
+    public Player player;
+    public DummyPlayerSystem(ItemDisplay itemDisplay,Player player){
+        this.itemDisplay = itemDisplay;
+        this.player = player;
     }
 
     @Override
     public void run() {
-        for()
+        for(int i = 0; i < spawnLocation.size();i++){
+            Location location = spawnLocation.get(i);
+            if(itemDisplay.getLocation().distance(location) < 3){
+                CommandListener.spawnScoreCalculator(player,i);
+            }
+        }
+
 
 
         times++;
-
         if(times > TAD_Character_Engineer.config.getInt("DummyPlayerLivingTime")*20){
+            itemDisplay.remove();
             cancel();
+
         }
     }
 }
